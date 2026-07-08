@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Access Denied')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container flex-grow-1 d-flex align-items-center py-5">
+    <div class="vb-card vb-surface shadow-soft mx-auto text-center text-dark" style="max-width: 720px;">
+        <span class="vb-pill mb-3 text-danger"><i class="bi bi-shield-slash"></i> Access Denied</span>
+        <h1 class="vb-section-title mb-3">You are not authorized.</h1>
+        <p class="vb-lead mb-4 text-secondary">You do not have permission to view or interact with this page.</p>
+        <a th:href="@{/}" class="btn btn-primary px-4"><i class="bi bi-house-door me-2"></i>Back to Home</a>
+    </div>
+</main>
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

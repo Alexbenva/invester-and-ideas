@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Contact Us')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+
+<main class="container py-5 flex-grow-1">
+    <div class="vb-card vb-surface shadow-soft p-4 p-lg-5 border-0 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(244,247,255,0.92) 100%);">
+        
+        <!-- Decorative Glow Blur Balls -->
+        <div class="position-absolute" style="width: 220px; height: 220px; background: rgba(56, 103, 255, 0.12); filter: blur(55px); top: -20px; left: -20px; border-radius: 50%;"></div>
+        <div class="position-absolute" style="width: 180px; height: 180px; background: rgba(15, 185, 199, 0.15); filter: blur(45px); bottom: -30px; right: -30px; border-radius: 50%;"></div>
+
+        <div class="row g-5 align-items-center position-relative">
+            <!-- Left Info Panel -->
+            <div class="col-lg-6">
+                <span class="vb-pill mb-3 bg-white shadow-sm border border-light text-primary d-inline-block px-3 py-1">
+                    <i class="bi bi-chat-dots-fill text-cyan me-1"></i> Contact Us
+                </span>
+                <h1 class="display-6 fw-bold text-dark mb-3">
+                    Talk to the <span style="background: linear-gradient(135deg, var(--vb-indigo), var(--vb-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">VentureBridge Team</span>.
+                </h1>
+                <p class="vb-lead text-secondary mb-4" style="font-size: 1.1rem; line-height: 1.6;">
+                    Have questions about platform verification, investment rules, or custom partnerships? Reach out to us through any of our channels below. Our support team is here to help you navigate our ecosystem.
+                </p>
+
+                <!-- Channels Info -->
+                <div class="d-flex flex-column gap-3 mb-4">
+                    <div class="vb-floating-card p-3 d-flex align-items-center gap-3 vb-hover-lift" style="background: rgba(255,255,255,0.9);">
+                        <div class="vb-icon-pill bg-primary-soft text-primary rounded-3 flex-shrink-0" style="background: rgba(56, 103, 255, 0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-envelope-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark mb-0 small">Email Support</div>
+                            <a href="mailto:support@venturebridge.com" class="text-secondary small text-decoration-none">support@venturebridge.com</a>
+                        </div>
+                    </div>
+                    
+                    <div class="vb-floating-card p-3 d-flex align-items-center gap-3 vb-hover-lift" style="background: rgba(255,255,255,0.9);">
+                        <div class="vb-icon-pill bg-cyan-soft text-cyan rounded-3 flex-shrink-0" style="background: rgba(15, 185, 199, 0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-building-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark mb-0 small">Partnerships & Media</div>
+                            <a href="mailto:partnerships@venturebridge.com" class="text-secondary small text-decoration-none">partnerships@venturebridge.com</a>
+                        </div>
+                    </div>
+
+                    <div class="vb-floating-card p-3 d-flex align-items-center gap-3 vb-hover-lift" style="background: rgba(255,255,255,0.9);">
+                        <div class="vb-icon-pill bg-success-soft text-success rounded-3 flex-shrink-0" style="background: rgba(40, 167, 69, 0.1); width: 45px; height: 45px; display: flex; align-items: center; justify-content: center;">
+                            <i class="bi bi-geo-alt-fill fs-5"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold text-dark mb-0 small">Global Headquarters</div>
+                            <span class="text-secondary small">One Sansome Street, San Francisco, CA 94104</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="small text-secondary">
+                    <i class="bi bi-clock me-1"></i> Support Hours: Monday - Friday, 9:00 AM - 6:00 PM PST
+                </div>
+            </div>
+
+            <!-- Right Message Form -->
+            <div class="col-lg-6">
+                <div class="p-4 p-lg-5 bg-white shadow-soft rounded-4 border border-light">
+                    <h3 class="h5 fw-bold text-dark mb-3"><i class="bi bi-envelope-open-fill text-primary me-2"></i>Send a Message</h3>
+                    
+                    <form id="contactForm" onsubmit="event.preventDefault(); alert('Thank you for contacting VentureBridge! Our team will respond to your inquiry shortly.'); this.reset();">
+                        <div class="mb-3">
+                            <label for="contactName" class="form-label fw-semibold small text-secondary">Your Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-person text-secondary"></i></span>
+                                <input type="text" class="form-control bg-light border-start-0" id="contactName" required placeholder="John Doe">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contactEmail" class="form-label fw-semibold small text-secondary">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-secondary"></i></span>
+                                <input type="email" class="form-control bg-light border-start-0" id="contactEmail" required placeholder="john@example.com">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="contactMessage" class="form-label fw-semibold small text-secondary">Message</label>
+                            <textarea class="form-control bg-light" id="contactMessage" rows="4" required placeholder="How can we help you today?"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 py-2.5 mt-2 vb-hover-lift">
+                            <i class="bi bi-send-fill me-2"></i>Submit Inquiry
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Investor Requests')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container-fluid vb-shell flex-grow-1">
+    <div class="container py-4">
+        <div class="vb-dashboard-hero p-4 p-lg-5 mb-4 rounded-4 shadow-soft">
+            <div class="content">
+                <span class="vb-pill mb-3"><i class="bi bi-people-fill text-cyan me-1"></i> Connection Requests</span>
+                <h1 class="vb-section-title text-white mb-2 fw-bold">Investor Requests</h1>
+                <p class="mb-0 text-white-50">Review connection requests from interested investors wishing to unlock your proprietary files.</p>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-start">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-xl-2 d-none d-lg-block">
+                <div class="vb-sidebar p-3 shadow-soft rounded-4 border border-light bg-white">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <span class="vb-avatar bg-primary-subtle text-primary rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-building-up fs-5"></i>
+                        </span>
+                        <div>
+                            <div class="fw-bold text-dark small">Founder Portal</div>
+                            <div class="text-secondary small" style="font-size: 0.75rem;">Quick navigation</div>
+                        </div>
+                    </div>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/dashboard}"><i class="bi bi-grid-1x2"></i>Overview</a>
+                    <a class="vb-sidebar-link active d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-primary fw-semibold bg-primary-subtle" th:href="@{/founder/requests}"><i class="bi bi-people-fill"></i>Investor Requests</a>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/founder/startups/new}"><i class="bi bi-plus-circle"></i>Create startup</a>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/startups}"><i class="bi bi-search"></i>Browse startups</a>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/notifications}"><i class="bi bi-bell"></i>Notifications</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-9 col-xl-10 vb-dashboard-content">
+                <div th:if="${successMessage != null}" class="alert alert-success border-0 shadow-sm mb-4" role="alert" th:text="${successMessage}"></div>
+                <div th:if="${errorMessage != null}" class="alert alert-danger border-0 shadow-sm mb-4" role="alert" th:text="${errorMessage}"></div>
+
+                <div class="card vb-card shadow-soft border-light p-4 bg-white rounded-4">
+                    <h5 class="fw-bold text-dark mb-4"><i class="bi bi-envelope-paper-fill text-primary me-2"></i>Pending Requests</h5>
+                    
+                    <div th:if="${requests == null || requests.isEmpty()}" class="py-5 text-center">
+                        <div class="rounded-circle bg-light d-inline-flex p-4 mb-3 text-secondary">
+                            <i class="bi bi-people-fill display-5"></i>
+                        </div>
+                        <h6 class="fw-bold text-dark mb-1">No pending requests</h6>
+                        <p class="text-secondary small mb-0">No investors have requested connection access yet.</p>
+                    </div>
+
+                    <div class="table-responsive" th:if="${requests != null && !requests.isEmpty()}">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr class="text-secondary small uppercase" style="border-bottom: 2px solid var(--bs-border-color);">
+                                    <th class="py-3">Investor</th>
+                                    <th class="py-3">Organization</th>
+                                    <th class="py-3">Expected Investment</th>
+                                    <th class="py-3">Pitch Message</th>
+                                    <th class="py-3">Received Date</th>
+                                    <th class="py-3 text-end">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="req : ${requests}">
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center gap-2.5">
+                                            <div class="avatar-circle-sm bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" 
+                                                 style="width: 36px; height: 36px;" th:text="${#strings.substring(req.investor.name, 0, 1)}">I</div>
+                                            <div>
+                                                <div class="fw-bold text-dark" th:text="${req.investor.name}">Name</div>
+                                                <div class="text-secondary small" th:text="${req.investor.email}">Email</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3 text-dark fw-medium" th:text="${req.investor.investorProfile != null ? req.investor.investorProfile.organization : 'N/A'}">Organization</td>
+                                    <td class="py-3">
+                                        <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1.5 fw-semibold small" th:if="${req.expectedInvestment != null}" th:text="${'$' + #numbers.formatDecimal(req.expectedInvestment, 0, 'COMMA', 0, 'POINT')}">Amount</span>
+                                        <span th:unless="${req.expectedInvestment != null}" class="text-secondary small">Not Specified</span>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="d-inline-block text-truncate text-secondary small" style="max-width: 220px;" th:text="${req.message}" th:title="${req.message}">Message</span>
+                                    </td>
+                                    <td class="py-3 text-secondary small" th:text="${#temporals.format(req.createdDate, 'yyyy-MM-dd')}">Date</td>
+                                    <td class="py-3">
+                                        <div class="d-flex justify-content-end gap-2">
+                                            <!-- View Profile Modal Trigger -->
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="modal" th:data-bs-target="${'#profileModal-' + req.id}">
+                                                <i class="bi bi-eye-fill me-1"></i>Profile
+                                            </button>
+                                            
+                                            <!-- Accept -->
+                                            <form th:action="@{/founder/requests/{id}/accept(id=${req.id})}" method="post" class="m-0">
+                                                <button type="submit" class="btn btn-primary btn-sm px-3"><i class="bi bi-check-circle-fill me-1"></i>Accept</button>
+                                            </form>
+                                            
+                                            <!-- Reject -->
+                                            <form th:action="@{/founder/requests/{id}/reject(id=${req.id})}" method="post" class="m-0">
+                                                <button type="submit" class="btn btn-danger btn-sm px-3"><i class="bi bi-x-circle-fill me-1"></i>Reject</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Investor Profile Modals -->
+<div th:each="req : ${requests}">
+    <div class="modal fade" th:id="${'profileModal-' + req.id}" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="modal-header bg-dark text-white border-0 py-3">
+                    <h5 class="modal-title fw-bold" th:text="${req.investor.name + ' - Profile'}">Profile</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-dark bg-light-subtle">
+                    <div class="mb-4 d-flex align-items-center gap-3">
+                        <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center fw-bold fs-3 shadow-sm"
+                             style="width: 60px; height: 60px;" th:text="${#strings.substring(req.investor.name, 0, 1)}">I</div>
+                        <div>
+                            <h5 class="fw-bold text-dark mb-0" th:text="${req.investor.name}">Name</h5>
+                            <span class="text-secondary small" th:text="${req.investor.email}">Email</span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-3 bg-white rounded-3 shadow-sm border border-light">
+                        <div class="fw-bold small text-secondary uppercase mb-1">Organization</div>
+                        <div class="fw-semibold text-dark fs-6" th:text="${req.investor.investorProfile != null ? req.investor.investorProfile.organization : 'N/A'}">Org</div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-white rounded-3 shadow-sm border border-light h-100">
+                                <div class="fw-bold small text-secondary uppercase mb-1">Min Ticket Size</div>
+                                <div class="fw-bold text-primary" th:text="${req.investor.investorProfile != null ? '$' + #numbers.formatDecimal(req.investor.investorProfile.investmentMin, 0, 'COMMA', 0, 'POINT') : 'N/A'}">Min</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-white rounded-3 shadow-sm border border-light h-100">
+                                <div class="fw-bold small text-secondary uppercase mb-1">Max Ticket Size</div>
+                                <div class="fw-bold text-primary" th:text="${req.investor.investorProfile != null ? '$' + #numbers.formatDecimal(req.investor.investorProfile.investmentMax, 0, 'COMMA', 0, 'POINT') : 'N/A'}">Max</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3 p-3 bg-white rounded-3 shadow-sm border border-light">
+                        <div class="fw-bold small text-secondary uppercase mb-1">Target Industries</div>
+                        <div class="fw-medium text-dark small" th:text="${req.investor.investorProfile != null ? req.investor.investorProfile.industriesInterested : 'N/A'}">Industries</div>
+                    </div>
+
+                    <div class="mb-3 p-3 bg-white rounded-3 shadow-sm border border-light">
+                        <div class="fw-bold small text-secondary uppercase mb-1">Experience & Background</div>
+                        <p class="small text-secondary mb-0" style="line-height: 1.5;" th:text="${req.investor.investorProfile != null ? req.investor.investorProfile.experience : 'N/A'}">Experience</p>
+                    </div>
+
+                    <div class="p-3 bg-white rounded-3 shadow-sm border border-light">
+                        <div class="fw-bold small text-secondary uppercase mb-1">Personal Bio</div>
+                        <p class="small text-secondary mb-0" style="line-height: 1.5;" th:text="${req.investor.investorProfile != null ? req.investor.investorProfile.bio : 'N/A'}">Bio</p>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 py-3">
+                    <button type="button" class="btn btn-secondary px-4 rounded-3" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

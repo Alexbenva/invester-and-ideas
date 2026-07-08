@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/fragments :: head('Startups')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+
+<main class="container py-4 py-lg-5 flex-grow-1">
+    <!-- Hero Banner Section -->
+    <div class="vb-card vb-surface shadow-soft p-4 p-lg-5 mb-4 border-0 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(244,247,255,0.92) 100%);">
+        
+        <!-- Decorative Glow Blur Balls -->
+        <div class="position-absolute" style="width: 180px; height: 180px; background: rgba(15, 185, 199, 0.14); filter: blur(45px); top: -20px; right: -20px; border-radius: 50%;"></div>
+        <div class="position-absolute" style="width: 130px; height: 130px; background: rgba(56, 103, 255, 0.1); filter: blur(35px); bottom: -30px; left: -30px; border-radius: 50%;"></div>
+
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 position-relative">
+            <div>
+                <span class="vb-pill mb-3 bg-white shadow-sm border border-light text-primary d-inline-block px-3 py-1">
+                    <i class="bi bi-search text-cyan me-1"></i> Startup Directory
+                </span>
+                <h1 class="display-6 fw-bold text-dark mb-2">Discover Vetted Opportunities</h1>
+                <p class="vb-lead text-secondary mb-0">Browse polished startup cards with a responsive layout built for mobile and desktop.</p>
+            </div>
+            <a sec:authorize="hasRole('FOUNDER')" th:href="@{/founder/startups/new}" class="btn btn-primary px-4 py-2 vb-hover-lift">
+                <i class="bi bi-plus-circle me-2"></i>Create Startup
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3">
+            <div class="card vb-card shadow-soft p-3 border border-light" style="background: rgba(255, 255, 255, 0.95);">
+                <h5 class="mb-3 fw-bold text-dark"><i class="bi bi-funnel text-primary me-2"></i>Filter Startups</h5>
+                <form th:action="${#authorization.expression('hasRole(''INVESTOR'')')} ? @{/investor/startups} : @{/startups}" method="get" class="d-grid gap-3">
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Search Keywords</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-secondary"></i></span>
+                            <input type="text" class="form-control bg-light border-start-0" name="q" th:value="${query}" placeholder="Name or keyword...">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Industry</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-tag text-secondary"></i></span>
+                            <input type="text" class="form-control bg-light border-start-0" name="industry" th:value="${industry}" placeholder="e.g. Tech">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Development Stage</label>
+                        <select class="form-select form-select-sm bg-light" name="stage">
+                            <option value="">Any Stage</option>
+                            <option th:value="IDEA" th:selected="${stage == 'IDEA'}">Idea</option>
+                            <option th:value="MVP" th:selected="${stage == 'MVP'}">MVP</option>
+                            <option th:value="EARLY_REVENUE" th:selected="${stage == 'EARLY_REVENUE'}">Early Revenue</option>
+                            <option th:value="GROWTH" th:selected="${stage == 'GROWTH'}">Growth</option>
+                            <option th:value="SCALE" th:selected="${stage == 'SCALE'}">Scale</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Min Funding (USD)</label>
+                        <input type="number" class="form-control form-control-sm bg-light" name="minFunding" th:value="${minFunding}" placeholder="Min amount">
+                    </div>
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Max Funding (USD)</label>
+                        <input type="number" class="form-control form-control-sm bg-light" name="maxFunding" th:value="${maxFunding}" placeholder="Max amount">
+                    </div>
+                    <div>
+                        <label class="form-label small fw-semibold text-secondary mb-1">Location</label>
+                        <div class="input-group input-group-sm">
+                            <span class="input-group-text bg-light border-end-0"><i class="bi bi-geo-alt text-secondary"></i></span>
+                            <input type="text" class="form-control bg-light border-start-0" name="location" th:value="${location}" placeholder="e.g. London">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-sm mt-2 vb-hover-lift"><i class="bi bi-filter me-2"></i>Apply Filters</button>
+                    <a th:href="${#authorization.expression('hasRole(''INVESTOR'')')} ? @{/investor/startups} : @{/startups}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-x-circle me-2"></i>Clear</a>
+                </form>
+            </div>
+        </div>
+
+        <!-- Startups Grid -->
+        <div class="col-lg-9">
+            <div th:if="${successMessage != null}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+
+            <div th:if="${startupsPage == null || startupsPage.isEmpty()}" class="text-center py-5 vb-card bg-white shadow-soft">
+                <i class="bi bi-building-exclamation text-secondary display-4 mb-3 d-block"></i>
+                <p class="vb-lead text-secondary mb-0">No startups found matching your criteria.</p>
+            </div>
+
+            <div class="row g-4" th:if="${startupsPage != null && !startupsPage.isEmpty()}">
+                <div class="col-md-6" th:each="startup : ${startupsPage.content}">
+                    <div class="card vb-card h-100 d-flex flex-column justify-content-between border border-light" style="background: rgba(255, 255, 255, 0.95);">
+                        <div class="card-body p-4">
+                            <!-- Top Header of Card -->
+                            <div class="d-flex justify-content-between align-items-start mb-3 gap-2">
+                                <div class="d-flex align-items-center gap-3">
+                                    <div th:if="${startup.logo != null && !startup.logo.isBlank()}" class="flex-shrink-0">
+                                        <img th:src="${startup.logo}" class="rounded-3 shadow-sm border border-light" style="width: 48px; height: 48px; object-fit: cover;" alt="Logo">
+                                    </div>
+                                    <div th:unless="${startup.logo != null && !startup.logo.isBlank()}" class="flex-shrink-0 d-flex align-items-center justify-content-center text-white rounded-3 fw-bold fs-5 shadow-sm"
+                                         style="width: 48px; height: 48px; background: linear-gradient(135deg, var(--vb-blue), var(--vb-cyan));"
+                                         th:text="${#strings.substring(startup.title,0,1).toUpperCase()}">
+                                        A
+                                    </div>
+                                    <div>
+                                        <h4 class="card-title mb-1 fw-bold text-dark" style="font-size: 1.15rem;" th:text="${startup.title}">Startup Title</h4>
+                                        <p class="card-text text-primary small fw-semibold mb-0"><i class="bi bi-tag-fill me-1"></i><span th:text="${startup.industry}">Industry</span></p>
+                                    </div>
+                                </div>
+                                <span class="badge rounded-pill px-2.5 py-1.5 small text-uppercase"
+                                      th:classappend="${startup.verificationStatus.name() == 'VERIFIED' ? 'bg-success-subtle text-success border border-success' : (startup.verificationStatus.name() == 'PENDING' ? 'bg-warning-subtle text-warning border border-warning' : 'bg-danger-subtle text-danger border border-danger')}"
+                                      th:text="${startup.verificationStatus}">
+                                    STATUS
+                                </span>
+                            </div>
+                            
+                            <!-- Description -->
+                            <p class="text-secondary small mb-3" style="min-height: 4.5rem; line-height: 1.5;" th:text="${startup.description}">Description</p>
+                            
+                            <!-- Details Parameters Grid -->
+                            <div class="p-3 rounded-4 bg-light border border-light shadow-sm">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="text-secondary small fw-medium"><i class="bi bi-rocket-takeoff-fill text-primary me-1"></i>Stage</div>
+                                        <div class="fw-bold text-dark small" th:text="${startup.stage}">Stage</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-secondary small fw-medium"><i class="bi bi-cash-stack text-success me-1"></i>Funding Target</div>
+                                        <div class="fw-bold text-dark small" th:text="${'$' + #numbers.formatDecimal(startup.fundRequired, 0, 'COMMA', 0, 'POINT')}">$0</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-secondary small fw-medium"><i class="bi bi-geo-alt-fill text-danger me-1"></i>Location</div>
+                                        <div class="fw-bold text-dark small" th:text="${startup.location}">Location</div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="text-secondary small fw-medium"><i class="bi bi-person-fill text-info me-1"></i>Founder</div>
+                                        <div class="fw-bold text-dark small text-truncate" th:text="${startup.founder != null ? startup.founder.name : 'Unknown'}">Founder</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Footer Actions -->
+                        <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                            <div class="d-flex justify-content-between align-items-center gap-2 mt-auto">
+                                <a class="btn btn-outline-primary btn-sm flex-grow-1 py-2 vb-hover-lift" th:href="@{/startups/{id}(id=${startup.id})}">
+                                    View Details <i class="bi bi-arrow-right ms-1"></i>
+                                </a>
+                                
+                                <div sec:authorize="hasRole('INVESTOR')" class="d-flex gap-2">
+                                    <form th:action="@{/investor/startups/{id}/bookmark(id=${startup.id})}" method="post">
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm py-2 px-2.5" title="Bookmark Startup"><i class="bi bi-bookmark-fill"></i></button>
+                                    </form>
+                                    <button class="btn btn-primary btn-sm px-3 py-2 vb-hover-lift"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#interestModal"
+                                            th:data-startup-id="${startup.id}"
+                                            th:data-startup-title="${startup.title}"
+                                            onclick="openInterestModal(this)">
+                                        Express Interest
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Interest Express Modal -->
+<div class="modal fade" id="interestModal" tabindex="-1" aria-labelledby="interestModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-dark">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold" id="interestModalLabel">Express Interest in <span id="modalStartupTitle" class="text-primary">Startup</span></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="interestForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="interestMessage" class="form-label fw-semibold small text-secondary">Introduce yourself & outline your investment thesis</label>
+                        <textarea class="form-control bg-light" id="interestMessage" name="message" rows="4" required placeholder="Describe why you want to connect with this founder..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="interestAmount" class="form-label fw-semibold small text-secondary">Expected Investment Amount (USD, Optional)</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light text-secondary fw-semibold">$</span>
+                            <input type="number" step="0.01" class="form-control bg-light" id="interestAmount" name="expectedInvestment" placeholder="e.g. 50000">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary py-2 px-3 vb-hover-lift">Send Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+
+<script>
+function openInterestModal(button) {
+    const startupId = button.getAttribute('data-startup-id');
+    const startupTitle = button.getAttribute('data-startup-title');
+    document.getElementById('modalStartupTitle').innerText = startupTitle;
+    document.getElementById('interestForm').action = '/investor/startups/' + startupId + '/interest';
+}
+</script>
+</body>
+</html>

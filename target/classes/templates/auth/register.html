@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Register')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container py-4 py-lg-5 flex-grow-1 d-flex align-items-center">
+    <div class="auth-card auth-card-lg mx-auto shadow-soft p-0 overflow-hidden w-100">
+        <div class="row g-0">
+            <div class="col-lg-5 d-none d-lg-block">
+                <div class="vb-auth-illustration h-100 p-5 d-flex align-items-end">
+                    <div class="content">
+                        <span class="vb-pill mb-3"><i class="bi bi-person-plus-fill"></i> Join VentureBridge</span>
+                        <h2 class="display-6 fw-bold mb-3">Create a premium account.</h2>
+                        <p class="mb-0 opacity-90">Set up your profile in minutes and unlock role-based startup discovery, dashboards, and messaging.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div class="vb-panel h-100 border-0 rounded-0 shadow-none">
+                    <div class="vb-panel-inner">
+                        <span class="vb-pill mb-3"><i class="bi bi-person-badge"></i> Register</span>
+                        <h1 class="h3 mb-2">Create account</h1>
+                        <p class="vb-faint mb-4">Build your profile with the details below.</p>
+                        <div th:if="${errorMessage != null}" class="alert alert-danger" role="alert" th:text="${errorMessage}"></div>
+                        <div th:if="${successMessage != null}" class="alert alert-success" role="alert" th:text="${successMessage}"></div>
+
+                        <form th:action="@{/register}" th:object="${registerRequest}" method="post" class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Name</label>
+                                <input class="form-control" th:field="*{name}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Phone</label>
+                                <input class="form-control" th:field="*{phone}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">LinkedIn URL (Optional)</label>
+                                <input class="form-control" th:field="*{linkedin}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('linkedin')}" th:errors="*{linkedin}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Email</label>
+                                <input type="email" class="form-control" th:field="*{email}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Role</label>
+                                <select class="form-select" th:field="*{role}">
+                                    <option value="">Select role</option>
+                                    <option th:value="ROLE_FOUNDER">Founder</option>
+                                    <option th:value="ROLE_INVESTOR">Investor</option>
+                                    <option th:value="ROLE_ADMIN">Admin</option>
+                                </select>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('role')}" th:errors="*{role}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Password</label>
+                                <input type="password" class="form-control" th:field="*{password}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label vb-form-label">Confirm Password</label>
+                                <input type="password" class="form-control" th:field="*{confirmPassword}">
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+                            </div>
+                            <div class="col-12"><button class="btn btn-primary w-100 py-3" type="submit">Register</button></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

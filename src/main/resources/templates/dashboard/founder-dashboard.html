@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Founder Dashboard')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+
+<main class="container py-4 flex-grow-1 animate-fade-in">
+    <!-- Dashboard Hero Header -->
+    <div class="vb-card vb-surface shadow-soft p-4 p-lg-5 mb-4 border-0 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(244,247,255,0.92) 100%);">
+        <div class="row align-items-center g-4 position-relative">
+            <div class="col-lg-8">
+                <span class="vb-pill mb-3 bg-white shadow-sm border border-light text-primary d-inline-block px-3 py-1">
+                    <i class="bi bi-building-fill text-cyan me-1"></i> Founder Hub
+                </span>
+                <h1 class="display-6 fw-bold text-dark mb-2">Founder Workspace</h1>
+                <p class="vb-lead text-secondary mb-0">Showcase your ventures, monitor connection requests, and connect with aligned capital partners.</p>
+            </div>
+            <div class="col-lg-4 text-lg-end">
+                <a th:href="@{/founder/startups/new}" class="btn btn-primary px-4 py-2.5 vb-hover-lift">
+                    <i class="bi bi-plus-circle me-2"></i>Launch New Startup
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Sidebar Navigation -->
+        <div class="col-lg-3 col-xl-2">
+            <div class="card vb-card shadow-soft p-3 border-light h-100">
+                <div class="d-flex align-items-center gap-3 mb-3 pb-2 border-bottom border-light">
+                    <span class="vb-avatar"><i class="bi bi-building-up"></i></span>
+                    <div>
+                        <div class="fw-bold text-dark small">Workspace</div>
+                        <div class="vb-faint small">Founder Panel</div>
+                    </div>
+                </div>
+                <a class="vb-sidebar-link active mb-1" th:href="@{/dashboard}"><i class="bi bi-grid-1x2-fill"></i>Overview</a>
+                <a class="vb-sidebar-link mb-1" th:href="@{/founder/requests}"><i class="bi bi-people-fill"></i>Investor Requests</a>
+                <a class="vb-sidebar-link mb-1" th:href="@{/founder/startups/new}"><i class="bi bi-plus-circle-fill"></i>Create Startup</a>
+                <a class="vb-sidebar-link mb-1" th:href="@{/startups}"><i class="bi bi-search"></i>Marketplace</a>
+                <a class="vb-sidebar-link" th:href="@{/notifications}"><i class="bi bi-bell-fill"></i>Notifications</a>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="col-lg-9 col-xl-10">
+            <!-- Stats Blocks -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-3 col-sm-6">
+                    <div class="vb-stat vb-card shadow-soft h-100 border-light p-3 bg-white">
+                        <div class="text-secondary small fw-medium">Total Startups</div>
+                        <h3 class="vb-stat-value text-dark fw-bold my-1" th:text="${stats.founderStartups}">0</h3>
+                        <div class="small text-muted"><i class="bi bi-building text-primary me-1"></i>Active listings</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="vb-stat vb-card shadow-soft h-100 border-light p-3 bg-white">
+                        <div class="text-secondary small fw-medium">Pending Requests</div>
+                        <h3 class="vb-stat-value text-warning fw-bold my-1" th:text="${stats.pendingRequests}">0</h3>
+                        <div class="small text-muted"><i class="bi bi-hourglass-split text-warning me-1"></i>Awaiting review</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="vb-stat vb-card shadow-soft h-100 border-light p-3 bg-white">
+                        <div class="text-secondary small fw-medium">Accepted Investors</div>
+                        <h3 class="vb-stat-value text-success fw-bold my-1" th:text="${stats.acceptedRequests}">0</h3>
+                        <div class="small text-muted"><i class="bi bi-patch-check-fill text-success me-1"></i>Active links</div>
+                    </div>
+                </div>
+                <div class="col-md-3 col-sm-6">
+                    <div class="vb-stat vb-card shadow-soft h-100 border-light p-3 bg-white">
+                        <div class="text-secondary small fw-medium">Rejected Requests</div>
+                        <h3 class="vb-stat-value text-danger fw-bold my-1" th:text="${stats.rejectedRequests}">0</h3>
+                        <div class="small text-muted"><i class="bi bi-x-circle-fill text-danger me-1"></i>Declined matching</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Performance Charts Section -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-8">
+                    <div class="card vb-card shadow-soft border-light p-4 bg-white">
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-bar-chart-fill text-primary me-2"></i>Startup Funding Requirements</h5>
+                        <div style="height: 260px; position: relative;">
+                            <canvas id="fundingChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4">
+                    <div class="card vb-card shadow-soft border-light p-4 bg-white">
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-pie-chart-fill text-cyan me-2"></i>Investor Interest Distribution</h5>
+                        <div style="height: 260px; position: relative;">
+                            <canvas id="interestPieChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Startups Table & Timeline -->
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <div class="card vb-card shadow-soft border-light p-4 bg-white">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold text-dark mb-0"><i class="bi bi-folder-fill text-primary me-2"></i>Your Startups</h5>
+                            <span class="badge bg-primary-soft text-primary px-2.5 py-1.5 small" style="background: rgba(56, 103, 255, 0.1);" th:text="${#lists.size(startups) + ' Total'}">0</span>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(startups)}" class="text-center py-4">
+                            <i class="bi bi-building-exclamation text-secondary display-6 mb-2 d-block"></i>
+                            <p class="text-secondary small mb-0">No startups listed yet.</p>
+                        </div>
+
+                        <div class="table-responsive" th:unless="${#lists.isEmpty(startups)}">
+                            <table class="table align-middle text-dark">
+                                <thead>
+                                    <tr>
+                                        <th>Startup Name</th>
+                                        <th>Industry</th>
+                                        <th>Target</th>
+                                        <th class="text-end">Verification</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="startup : ${startups}">
+                                        <td>
+                                            <a th:href="@{/startups/{id}(id=${startup.id})}" class="fw-bold text-dark text-decoration-none hover-link" th:text="${startup.title}">Startup</a>
+                                        </td>
+                                        <td class="small text-secondary" th:text="${startup.industry}">Tech</td>
+                                        <td class="small fw-semibold text-dark" th:text="${'$' + #numbers.formatDecimal(startup.fundRequired, 0, 'COMMA', 0, 'POINT')}">$0</td>
+                                        <td class="text-end">
+                                            <span class="badge rounded-pill px-2.5 py-1.5 small text-uppercase"
+                                                  th:classappend="${startup.verificationStatus.name() == 'VERIFIED' ? 'bg-success-subtle text-success' : (startup.verificationStatus.name() == 'PENDING' ? 'bg-warning-subtle text-warning' : 'bg-danger-subtle text-danger')}"
+                                                  th:text="${startup.verificationStatus}">
+                                                STATUS
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card vb-card shadow-soft border-light p-4 bg-white">
+                        <h5 class="fw-bold text-dark mb-3"><i class="bi bi-clock-history text-cyan me-2"></i>Workspace Notifications</h5>
+                        
+                        <div th:if="${#lists.isEmpty(notifications)}" class="text-center py-4">
+                            <i class="bi bi-bell-slash text-secondary display-6 mb-2 d-block"></i>
+                            <p class="text-secondary small mb-0">No new notifications.</p>
+                        </div>
+
+                        <div class="vb-timeline" th:unless="${#lists.isEmpty(notifications)}">
+                            <div class="vb-timeline-item" th:each="notif, iterStat : ${notifications}" th:if="${iterStat.index < 4}">
+                                <div class="fw-bold text-dark small" th:text="${notif.message}">Notification content</div>
+                                <span class="text-secondary small" th:text="${#temporals.format(notif.createdDate, 'yyyy-MM-dd HH:mm')}">Date</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+
+<!-- Dynamic Chart Scripts using real model statistics -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+document.addEventListener("DOMContentLoaded", function() {
+    // 1. Investor Interest Pie Chart
+    const pendingVal = /*[[${stats.pendingRequests}]]*/ 0;
+    const acceptedVal = /*[[${stats.acceptedRequests}]]*/ 0;
+    const rejectedVal = /*[[${stats.rejectedRequests}]]*/ 0;
+    
+    const ctxPie = document.getElementById('interestPieChart').getContext('2d');
+    new Chart(ctxPie, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'Accepted', 'Rejected'],
+            datasets: [{
+                data: [pendingVal, acceptedVal, rejectedVal],
+                backgroundColor: ['#eab308', '#22c55e', '#ef4444'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { boxWidth: 12, font: { family: 'Poppins' } }
+                }
+            }
+        }
+    });
+
+    // 2. Startup Funding Requirement Bar Chart
+    const labels = [];
+    const fundingData = [];
+    /*[# th:each="s : ${startups}"]*/
+    labels.push(/*[[${s.title}]]*/ '');
+    fundingData.push(/*[[${s.fundRequired}]]*/ 0);
+    /*[/]*/
+
+    const ctxBar = document.getElementById('fundingChart').getContext('2d');
+    new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: labels.length > 0 ? labels : ['No Startups'],
+            datasets: [{
+                label: 'Funding Goal ($)',
+                data: fundingData.length > 0 ? fundingData : [0],
+                backgroundColor: 'rgba(56, 103, 255, 0.85)',
+                borderColor: 'var(--vb-blue)',
+                borderWidth: 1,
+                borderRadius: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { font: { family: 'Poppins' } }
+                },
+                x: {
+                    ticks: { font: { family: 'Poppins' } }
+                }
+            }
+        }
+    });
+});
+/*]]>*/
+</script>
+</body>
+</html>

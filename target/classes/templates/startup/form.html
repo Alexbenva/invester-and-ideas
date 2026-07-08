@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head(${startupId != null} ? 'Edit Startup Profile' : 'Create Startup Profile')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container-fluid vb-shell flex-grow-1">
+    <div class="container py-4">
+        <div class="vb-dashboard-hero p-4 p-lg-5 mb-4 rounded-4 shadow-soft">
+            <div class="content">
+                <span class="vb-pill mb-3"><i class="bi bi-file-earmark-plus-fill text-cyan me-1"></i> Ventures Desk</span>
+                <h1 class="vb-section-title text-white mb-2 fw-bold" th:text="${startupId != null} ? 'Edit Startup Profile' : 'Publish Startup Listing'">Startup</h1>
+                <p class="mb-0 text-white-50">Create a highly compelling profile including financial parameters, stage parameters, problem/solution slides, and documents.</p>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-start">
+            <!-- Sidebar / Helper Info -->
+            <div class="col-lg-4 col-xl-3">
+                <div class="card vb-card shadow-soft border-light p-4 bg-white rounded-4 mb-4">
+                    <h6 class="fw-bold text-dark mb-3"><i class="bi bi-info-circle text-primary me-2"></i>Submission Tips</h6>
+                    <ul class="text-secondary small ps-3 mb-0" style="line-height: 1.6;">
+                        <li class="mb-2"><strong>Accurate Numbers:</strong> Ensure funding targets match your pitch deck exactly.</li>
+                        <li class="mb-2"><strong>Clear Solution:</strong> Describe your solution in terms of customer outcomes, not just technical features.</li>
+                        <li class="mb-2"><strong>Pitch Deck:</strong> Only PDFs are supported. Keep file size under 10MB.</li>
+                        <li><strong>Verification:</strong> Platform administrators audit listings before showcasing them to verified investors.</li>
+                    </ul>
+                </div>
+                
+                <div class="card vb-card shadow-soft border-light p-3 bg-white rounded-4">
+                    <a class="btn btn-outline-secondary btn-sm w-100 rounded-3" th:href="@{/dashboard}">
+                        <i class="bi bi-arrow-left-circle me-1"></i>Back to Overview
+                    </a>
+                </div>
+            </div>
+
+            <!-- Form Content Area -->
+            <div class="col-lg-8 col-xl-9">
+                <div th:if="${errorMessage != null}" class="alert alert-danger border-0 shadow-sm mb-4" role="alert" th:text="${errorMessage}"></div>
+                <div th:if="${successMessage != null}" class="alert alert-success border-0 shadow-sm mb-4" role="alert" th:text="${successMessage}"></div>
+
+                <div class="card vb-card shadow-soft border-light p-4 p-lg-5 bg-white rounded-4">
+                    <h5 class="fw-bold text-dark mb-4 border-bottom pb-3"><i class="bi bi-file-earmark-text text-primary me-2"></i>Startup Details</h5>
+                    
+                    <form th:action="${startupId != null} ? @{/founder/startups/{id}(id=${startupId})} : @{/founder/startups}" th:object="${startupRequest}" method="post" enctype="multipart/form-data" class="row g-4">
+                        
+                        <!-- Section 1: Basic Information -->
+                        <div class="col-12"><h6 class="text-primary fw-bold mb-0">1. Basic Details</h6></div>
+                        
+                        <div class="col-md-6">
+                            <label class="form-label text-dark fw-semibold small">Startup Title</label>
+                            <input class="form-control" th:field="*{title}" placeholder="e.g. Stripe, Linear, Notion">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-dark fw-semibold small">Industry Vertical</label>
+                            <input class="form-control" th:field="*{industry}" placeholder="e.g. Fintech, SaaS, Healthtech">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('industry')}" th:errors="*{industry}"></div>
+                        </div>
+                        
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Elevator Pitch & Description</label>
+                            <textarea class="form-control" rows="3" th:field="*{description}" placeholder="A high-level summary of your startup business, market, and potential."></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+                        </div>
+
+                        <!-- Section 2: Product Strategy -->
+                        <div class="col-12"><h6 class="text-primary fw-bold mb-0">2. Strategy & Opportunity</h6></div>
+
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Market Problem Statement</label>
+                            <textarea class="form-control" rows="3" th:field="*{problemStatement}" placeholder="Explain the pain point or gap in the market your startup targets."></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('problemStatement')}" th:errors="*{problemStatement}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Your Solution</label>
+                            <textarea class="form-control" rows="3" th:field="*{solution}" placeholder="Describe your product/service, and how it resolves the problem statement."></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('solution')}" th:errors="*{solution}"></div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Business Model</label>
+                            <textarea class="form-control" rows="3" th:field="*{businessModel}" placeholder="Describe how your company generates revenue, pricing strategy, distribution..."></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('businessModel')}" th:errors="*{businessModel}"></div>
+                        </div>
+
+                        <!-- Section 3: Financial Parameters -->
+                        <div class="col-12"><h6 class="text-primary fw-bold mb-0">3. Financial Projections & Targets</h6></div>
+
+                        <div class="col-md-4">
+                            <label class="form-label text-dark fw-semibold small">Funding Required ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" th:field="*{fundRequired}" placeholder="e.g. 500000">
+                            </div>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('fundRequired')}" th:errors="*{fundRequired}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-dark fw-semibold small">Equity Offered (%)</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control" th:field="*{equityOffered}" placeholder="e.g. 10">
+                                <span class="input-group-text">%</span>
+                            </div>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('equityOffered')}" th:errors="*{equityOffered}"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-dark fw-semibold small">Development Stage</label>
+                            <select class="form-select" th:field="*{stage}">
+                                <option th:value="IDEA">Idea Stage</option>
+                                <option th:value="MVP">MVP / Prototype</option>
+                                <option th:value="EARLY_REVENUE">Early Revenue</option>
+                                <option th:value="GROWTH">Growth Stage</option>
+                                <option th:value="SCALE">Scaling Operations</option>
+                            </select>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('stage')}" th:errors="*{stage}"></div>
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Financial Projections & Metrics</label>
+                            <textarea class="form-control" rows="3" th:field="*{financialDetails}" placeholder="Detail historical performance, runway, burn rate, and projection forecasts."></textarea>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('financialDetails')}" th:errors="*{financialDetails}"></div>
+                        </div>
+
+                        <!-- Section 4: Assets & Documents -->
+                        <div class="col-12"><h6 class="text-primary fw-bold mb-0">4. Branding & Documentation</h6></div>
+
+                        <div class="col-md-6">
+                            <label class="form-label text-dark fw-semibold small">Office Location</label>
+                            <input class="form-control" th:field="*{location}" placeholder="e.g. San Francisco, CA or Remote">
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('location')}" th:errors="*{location}"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label text-dark fw-semibold small">Startup Logo Image</label>
+                            <input type="file" class="form-control" th:field="*{logoFile}">
+                            <div class="form-text small">JPEG or PNG format. Will be cropped square.</div>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label text-dark fw-semibold small">Pitch Deck (PDF Format Only)</label>
+                            <input type="file" class="form-control" th:field="*{pitchDeckFile}">
+                            <div class="form-text small">This document will be locked and secure. Investors must submit access requests to unlock it.</div>
+                        </div>
+
+                        <div class="col-12 mt-4 pt-3 border-top">
+                            <button class="btn btn-primary btn-lg w-100 py-3 rounded-3" type="submit">
+                                <i class="bi bi-cloud-arrow-up-fill me-2"></i>Save & Publish Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

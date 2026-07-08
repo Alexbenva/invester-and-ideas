@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Manage Users - Admin Console')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container-fluid vb-shell flex-grow-1">
+    <div class="container py-4">
+        <div class="vb-dashboard-hero p-4 p-lg-5 mb-4 rounded-4 shadow-soft">
+            <div class="content">
+                <span class="vb-pill mb-3"><i class="bi bi-people-fill text-cyan me-1"></i> Operations Center</span>
+                <h1 class="vb-section-title text-white mb-2 fw-bold">User Management</h1>
+                <p class="mb-0 text-white-50">Audit, inspect, and filter all registered platform accounts in a premium centralized console.</p>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-start">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-xl-2 d-none d-lg-block">
+                <div class="vb-sidebar p-3 shadow-soft rounded-4 border border-light bg-white">
+                    <div class="d-flex align-items-center gap-3 mb-4">
+                        <span class="vb-avatar bg-dark text-white rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                            <i class="bi bi-shield-lock-fill fs-5"></i>
+                        </span>
+                        <div>
+                            <div class="fw-bold text-dark small">Admin Console</div>
+                            <div class="text-secondary small" style="font-size: 0.75rem;">Platform controls</div>
+                        </div>
+                    </div>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/dashboard}"><i class="bi bi-grid-1x2"></i>Overview</a>
+                    <a class="vb-sidebar-link active d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-primary fw-semibold bg-primary-subtle" th:href="@{/admin/users}"><i class="bi bi-people-fill"></i>Manage Users</a>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 mb-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/admin/startups}"><i class="bi bi-patch-check"></i>Audit Startups</a>
+                    <a class="vb-sidebar-link d-flex align-items-center gap-2 p-2.5 rounded-3 text-decoration-none text-secondary" th:href="@{/notifications}"><i class="bi bi-bell"></i>Notifications</a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-lg-9 col-xl-10 vb-dashboard-content">
+                <div class="card vb-card shadow-soft border-light p-4 bg-white rounded-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                        <h5 class="fw-bold text-dark mb-0"><i class="bi bi-person-lines-fill text-primary me-2"></i>Platform Accounts</h5>
+                        <span class="badge bg-light text-dark border rounded-pill px-3 py-1.5 fw-semibold small" th:text="${users.size() + ' Total Users'}">0 Total Users</span>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead>
+                                <tr class="text-secondary small uppercase" style="border-bottom: 2px solid var(--bs-border-color);">
+                                    <th class="py-3">Name</th>
+                                    <th class="py-3">Email Address</th>
+                                    <th class="py-3">Role Privilege</th>
+                                    <th class="py-3">Contact Number</th>
+                                    <th class="py-3">Registered Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="user : ${users}">
+                                    <td class="py-3">
+                                        <div class="d-flex align-items-center gap-2.5">
+                                            <div class="avatar-circle-sm bg-primary-subtle text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" 
+                                                 style="width: 36px; height: 36px;" th:text="${#strings.substring(user.name, 0, 1)}">U</div>
+                                            <span class="fw-bold text-dark" th:text="${user.name}">Name</span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3">
+                                        <a th:href="${'mailto:' + user.email}" class="text-decoration-none text-secondary small" th:text="${user.email}">Email</a>
+                                    </td>
+                                    <td class="py-3">
+                                        <span class="badge rounded-pill px-2.5 py-1.5 small fw-semibold"
+                                              th:classappend="${user.role.name() == 'ROLE_ADMIN' ? 'bg-danger-subtle text-danger' : (user.role.name() == 'ROLE_FOUNDER' ? 'bg-primary-subtle text-primary' : 'bg-success-subtle text-success')}"
+                                              th:text="${user.role}">
+                                            ROLE
+                                        </span>
+                                    </td>
+                                    <td class="py-3 text-secondary small" th:text="${user.phone != null && !user.phone.isBlank() ? user.phone : 'N/A'}">Phone</td>
+                                    <td class="py-3 text-secondary small" th:text="${#temporals.format(user.createdDate, 'yyyy-MM-dd')}">Date</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

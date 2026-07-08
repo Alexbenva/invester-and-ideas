@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{layout/fragments :: head('Not Found')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+<main class="container flex-grow-1 d-flex align-items-center py-5">
+    <div class="vb-card vb-surface shadow-soft mx-auto text-center" style="max-width: 720px;">
+        <span class="vb-pill mb-3"><i class="bi bi-exclamation-triangle"></i> Page not found</span>
+        <h1 class="vb-section-title mb-3">We couldn’t find that page.</h1>
+        <p class="vb-lead mb-4" th:text="${error}">The requested resource was not found.</p>
+        <a th:href="@{/}" class="btn btn-primary px-4"><i class="bi bi-house-door me-2"></i>Back to Home</a>
+    </div>
+</main>
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+</body>
+</html>

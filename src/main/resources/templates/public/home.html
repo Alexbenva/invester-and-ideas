@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{layout/fragments :: head('Home')}"></head>
+<body class="vb-body d-flex flex-column min-vh-100">
+<div th:replace="~{layout/fragments :: navbar}"></div>
+
+<main class="flex-grow-1">
+    <!-- Animated Hero Banner Section -->
+    <section class="py-5 py-lg-6 position-relative overflow-hidden" 
+             style="background: linear-gradient(135deg, rgba(7, 20, 37, 0.05) 0%, rgba(56, 103, 255, 0.05) 100%);">
+        
+        <!-- Decorative Pulsing Glow Balls -->
+        <div class="position-absolute" style="width: 300px; height: 300px; background: rgba(56, 103, 255, 0.12); filter: blur(80px); top: -50px; right: -50px; border-radius: 50%; animation: pulse 8s infinite alternate;"></div>
+        <div class="position-absolute" style="width: 250px; height: 250px; background: rgba(15, 185, 199, 0.1); filter: blur(70px); bottom: -60px; left: -60px; border-radius: 50%; animation: pulse 6s infinite alternate-reverse;"></div>
+
+        <div class="container position-relative z-1">
+            <div class="row align-items-center g-5">
+                <div class="col-lg-7">
+                    <span class="vb-pill mb-3 bg-white shadow-sm border border-light text-primary d-inline-block px-3 py-1">
+                        <i class="bi bi-stars text-cyan me-1"></i> Premium Matching Platform
+                    </span>
+                    <h1 class="display-4 fw-bold tracking-tight text-dark mb-3" style="line-height: 1.15;">
+                        Connecting <span style="background: linear-gradient(135deg, var(--vb-indigo), var(--vb-cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Innovative Founders</span> with Smart Investors.
+                    </h1>
+                    <p class="vb-lead text-secondary mb-4" style="font-size: 1.2rem; line-height: 1.6;">
+                        Build structured startup profiles, discover accredited capital resources, and manage connection requests from a single enterprise-ready ecosystem.
+                    </p>
+                    <div class="d-flex flex-column flex-sm-row gap-3">
+                        <a th:href="${#authorization.expression('hasRole(''INVESTOR'')')} ? @{/investor/startups} : @{/startups}" class="btn btn-primary btn-lg px-4 py-3 vb-hover-lift">
+                            <i class="bi bi-search me-2"></i>Explore Startups
+                        </a>
+                        <a th:href="@{/register}" class="btn btn-outline-secondary btn-lg px-4 py-3 vb-hover-lift">
+                            <i class="bi bi-rocket-takeoff me-2"></i>Launch Your Startup
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <!-- Real Database Stats Panel -->
+                    <div class="vb-card shadow-soft p-4 border border-light" style="background: rgba(255, 255, 255, 0.95);">
+                        <h4 class="h5 fw-bold text-dark mb-3"><i class="bi bi-graph-up text-primary me-2"></i>Ecosystem Statistics</h4>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-4 border border-light text-center">
+                                    <span class="d-block text-secondary small mb-1">Startups</span>
+                                    <h3 class="fw-bold text-dark mb-0" th:text="${totalStartups}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-4 border border-light text-center">
+                                    <span class="d-block text-secondary small mb-1">Investors</span>
+                                    <h3 class="fw-bold text-dark mb-0" th:text="${totalInvestors}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-4 border border-light text-center">
+                                    <span class="d-block text-secondary small mb-1">Founders</span>
+                                    <h3 class="fw-bold text-dark mb-0" th:text="${totalFounders}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 bg-light rounded-4 border border-light text-center">
+                                    <span class="d-block text-secondary small mb-1">Verified Co.</span>
+                                    <h3 class="fw-bold text-success mb-0" th:text="${totalVerifiedStartups}">0</h3>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="p-3 bg-primary-soft text-primary rounded-4 border border-light text-center" style="background: rgba(56, 103, 255, 0.08);">
+                                    <span class="d-block text-secondary small mb-1">Active Connections</span>
+                                    <h3 class="fw-bold text-primary mb-0" th:text="${totalActiveConnections}">0</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Flow Section -->
+    <section class="py-5 border-top border-light" style="background: #ffffff;">
+        <div class="container">
+            <div class="text-center max-w-2xl mx-auto mb-5">
+                <span class="vb-pill bg-light-subtle border border-light text-secondary mb-2">Workflow</span>
+                <h2 class="h3 fw-bold text-dark mb-2">How It Works</h2>
+                <p class="text-secondary small">VentureBridge streamlines connecting and collaborating in five clear stages.</p>
+            </div>
+
+            <div class="row g-4 justify-content-center">
+                <!-- Step 1 -->
+                <div class="col-md-2.4 col-sm-6 text-center">
+                    <div class="p-3 bg-light border border-light rounded-4 h-100 position-relative">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-primary text-white rounded-circle mb-3 shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-person-plus fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark">1. Register</h4>
+                        <p class="small text-secondary mb-0">Join as a Founder or Investor.</p>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="col-md-2.4 col-sm-6 text-center">
+                    <div class="p-3 bg-light border border-light rounded-4 h-100">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-cyan text-white rounded-circle mb-3 shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-building-add fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark">2. Create Startup</h4>
+                        <p class="small text-secondary mb-0">List profile & funding needs.</p>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="col-md-2.4 col-sm-6 text-center">
+                    <div class="p-3 bg-light border border-light rounded-4 h-100">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-warning text-white rounded-circle mb-3 shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-search fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark">3. Discovery</h4>
+                        <p class="small text-secondary mb-0">Investors discover matches.</p>
+                    </div>
+                </div>
+                <!-- Step 4 -->
+                <div class="col-md-2.4 col-sm-6 text-center">
+                    <div class="p-3 bg-light border border-light rounded-4 h-100">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-danger text-white rounded-circle mb-3 shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-lightning-charge fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark">4. Express Interest</h4>
+                        <p class="small text-secondary mb-0">Request private channel access.</p>
+                    </div>
+                </div>
+                <!-- Step 5 -->
+                <div class="col-md-2.4 col-sm-6 text-center">
+                    <div class="p-3 bg-light border border-light rounded-4 h-100">
+                        <div class="d-inline-flex align-items-center justify-content-center bg-success text-white rounded-circle mb-3 shadow-sm" style="width: 50px; height: 50px;">
+                            <i class="bi bi-check2-all fs-5"></i>
+                        </div>
+                        <h4 class="h6 fw-bold text-dark">5. Collaboration</h4>
+                        <p class="small text-secondary mb-0">Founder accepts for secure link.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Verified Startups Section -->
+    <section class="py-5 border-top border-light" style="background: rgba(248, 250, 252, 0.65);">
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-end mb-4">
+                <div>
+                    <span class="vb-pill text-cyan bg-cyan-soft mb-2" style="background: rgba(15, 185, 199, 0.1);">Verified Opportunities</span>
+                    <h2 class="h3 fw-bold text-dark mb-0">Featured Startups</h2>
+                </div>
+                <a th:href="${#authorization.expression('hasRole(''INVESTOR'')')} ? @{/investor/startups} : @{/startups}" class="btn btn-outline-primary btn-sm px-3 vb-hover-lift">
+                    View All Directory <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+
+            <div th:if="${#lists.isEmpty(featuredStartups)}" class="text-center py-5 vb-card bg-white border border-light shadow-soft rounded-4">
+                <i class="bi bi-building-exclamation text-secondary display-5 mb-2 d-block"></i>
+                <p class="vb-lead text-secondary mb-0">No verified featured startups available yet.</p>
+            </div>
+
+            <div class="row g-4" th:unless="${#lists.isEmpty(featuredStartups)}">
+                <div class="col-md-4" th:each="startup : ${featuredStartups}">
+                    <div class="card vb-card h-100 d-flex flex-column justify-content-between border border-light shadow-soft" style="background: #ffffff;">
+                        <div class="card-body p-4">
+                            <div class="d-flex align-items-center gap-3 mb-3">
+                                <div th:if="${startup.logo != null && !startup.logo.isBlank()}" class="flex-shrink-0">
+                                    <img th:src="${startup.logo}" class="rounded-3 shadow-sm border border-light" style="width: 44px; height: 44px; object-fit: cover;" alt="Logo">
+                                </div>
+                                <div th:unless="${startup.logo != null && !startup.logo.isBlank()}" class="flex-shrink-0 d-flex align-items-center justify-content-center text-white rounded-3 fw-bold fs-5 shadow-sm"
+                                     style="width: 44px; height: 44px; background: linear-gradient(135deg, var(--vb-blue), var(--vb-cyan));"
+                                     th:text="${#strings.substring(startup.title,0,1).toUpperCase()}">
+                                    A
+                                </div>
+                                <div>
+                                    <h4 class="h6 mb-0 fw-bold text-dark" th:text="${startup.title}">Startup</h4>
+                                    <span class="text-primary small fw-semibold" th:text="${startup.industry}">Industry</span>
+                                </div>
+                            </div>
+
+                            <p class="text-secondary small mb-3 text-truncate-3" style="min-height: 4rem;" th:text="${startup.description}">Description</p>
+
+                            <div class="row g-2 mb-0 py-2 border-top border-light">
+                                <div class="col-6">
+                                    <span class="text-secondary small d-block">Stage</span>
+                                    <strong class="text-dark small" th:text="${startup.stage}">Stage</strong>
+                                </div>
+                                <div class="col-6">
+                                    <span class="text-secondary small d-block">Funding Needed</span>
+                                    <strong class="text-dark small" th:text="${'$' + #numbers.formatDecimal(startup.fundRequired, 0, 'COMMA', 0, 'POINT')}">$0</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card-footer bg-transparent border-0 p-4 pt-0">
+                            <a class="btn btn-outline-primary btn-sm w-100 py-2 vb-hover-lift" th:href="@{/startups/{id}(id=${startup.id})}">
+                                View Details <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:replace="~{layout/fragments :: footer}"></div>
+<th:block th:replace="~{layout/fragments :: scripts}"></th:block>
+
+<style>
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.15); opacity: 1; }
+}
+.col-md-2\.4 {
+    flex: 0 0 auto;
+    width: 20%;
+}
+@media (max-width: 991.98px) {
+    .col-md-2\.4 {
+        width: 33.333%;
+    }
+}
+@media (max-width: 575.98px) {
+    .col-md-2\.4 {
+        width: 100%;
+    }
+}
+</style>
+</body>
+</html>
