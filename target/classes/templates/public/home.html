@@ -37,7 +37,7 @@
 
                 <div class="col-lg-5">
                     <!-- Real Database Stats Panel -->
-                    <div class="vb-card shadow-soft p-4 border border-light" style="background: rgba(255, 255, 255, 0.95);">
+                    <div class="vb-card shadow-soft p-4 border border-light">
                         <h4 class="h5 fw-bold text-dark mb-3"><i class="bi bi-graph-up text-primary me-2"></i>Ecosystem Statistics</h4>
                         <div class="row g-3">
                             <div class="col-6">
@@ -78,7 +78,7 @@
     </section>
 
     <!-- How It Works Flow Section -->
-    <section class="py-5 border-top border-light" style="background: #ffffff;">
+    <section class="py-5 border-top border-light">
         <div class="container">
             <div class="text-center max-w-2xl mx-auto mb-5">
                 <span class="vb-pill bg-light-subtle border border-light text-secondary mb-2">Workflow</span>
@@ -142,7 +142,7 @@
     </section>
 
     <!-- Featured Verified Startups Section -->
-    <section class="py-5 border-top border-light" style="background: rgba(248, 250, 252, 0.65);">
+    <section class="py-5 border-top border-light">
         <div class="container">
             <div class="d-flex justify-content-between align-items-end mb-4">
                 <div>
@@ -154,14 +154,14 @@
                 </a>
             </div>
 
-            <div th:if="${#lists.isEmpty(featuredStartups)}" class="text-center py-5 vb-card bg-white border border-light shadow-soft rounded-4">
+            <div th:if="${#lists.isEmpty(featuredStartups)}" class="text-center py-5 vb-card border border-light shadow-soft rounded-4">
                 <i class="bi bi-building-exclamation text-secondary display-5 mb-2 d-block"></i>
                 <p class="vb-lead text-secondary mb-0">No verified featured startups available yet.</p>
             </div>
 
             <div class="row g-4" th:unless="${#lists.isEmpty(featuredStartups)}">
                 <div class="col-md-4" th:each="startup : ${featuredStartups}">
-                    <div class="card vb-card h-100 d-flex flex-column justify-content-between border border-light shadow-soft" style="background: #ffffff;">
+                    <div class="card vb-card h-100 d-flex flex-column justify-content-between border border-light shadow-soft">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center gap-3 mb-3">
                                 <div th:if="${startup.logo != null && !startup.logo.isBlank()}" class="flex-shrink-0">

@@ -157,13 +157,17 @@
 <script th:inline="javascript">
 /*<![CDATA[*/
 document.addEventListener("DOMContentLoaded", function() {
+    const isDarkTheme = document.documentElement.classList.contains('dark-theme') || document.body.classList.contains('dark-theme');
+    const labelColor = isDarkTheme ? '#94a3b8' : '#64748b';
+    const gridColor = isDarkTheme ? 'rgba(255, 255, 255, 0.08)' : 'rgba(148, 163, 184, 0.16)';
+
     // Compile statistics from injected collections
     // 1. Compute Role breakdown
     let investors = 0, founders = 0, admins = 0;
     /*[# th:each="u : ${users}"]*/
-    if (/*[[${u.role.name()}]]*/ '' === 'ROLE_INVESTOR') investors++;
-    else if (/*[[${u.role.name()}]]*/ '' === 'ROLE_FOUNDER') founders++;
-    else if (/*[[${u.role.name()}]]*/ '' === 'ROLE_ADMIN') admins++;
+    if (/*[[${u.role.name() == 'ROLE_INVESTOR'}]]*/ false) investors++;
+    else if (/*[[${u.role.name() == 'ROLE_FOUNDER'}]]*/ false) founders++;
+    else if (/*[[${u.role.name() == 'ROLE_ADMIN'}]]*/ false) admins++;
     /*[/]*/
 
     const ctxRoles = document.getElementById('userRolesChart').getContext('2d');
@@ -183,7 +187,11 @@ document.addEventListener("DOMContentLoaded", function() {
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { boxWidth: 12, font: { family: 'Poppins' } }
+                    labels: { 
+                        boxWidth: 12, 
+                        color: labelColor,
+                        font: { family: 'Poppins' } 
+                    }
                 }
             }
         }
@@ -192,9 +200,9 @@ document.addEventListener("DOMContentLoaded", function() {
     // 2. Compute verification breakdown
     let verified = 0, pending = 0, rejected = 0;
     /*[# th:each="s : ${startups}"]*/
-    if (/*[[${s.verificationStatus.name()}]]*/ '' === 'VERIFIED') verified++;
-    else if (/*[[${s.verificationStatus.name()}]]*/ '' === 'PENDING') pending++;
-    else if (/*[[${s.verificationStatus.name()}]]*/ '' === 'REJECTED' || /*[[${s.verificationStatus.name()}]]*/ '' === 'SPAM') rejected++;
+    if (/*[[${s.verificationStatus.name() == 'VERIFIED'}]]*/ false) verified++;
+    else if (/*[[${s.verificationStatus.name() == 'PENDING'}]]*/ false) pending++;
+    else if (/*[[${s.verificationStatus.name() == 'REJECTED' || s.verificationStatus.name() == 'SPAM'}]]*/ false) rejected++;
     /*[/]*/
 
     const ctxStatus = document.getElementById('startupStatusChart').getContext('2d');
@@ -217,8 +225,26 @@ document.addEventListener("DOMContentLoaded", function() {
                 legend: { display: false }
             },
             scales: {
-                y: { beginAtZero: true, ticks: { precision: 0, font: { family: 'Poppins' } } },
-                x: { ticks: { font: { family: 'Poppins' } } }
+                y: { 
+                    beginAtZero: true, 
+                    ticks: { 
+                        precision: 0, 
+                        color: labelColor,
+                        font: { family: 'Poppins' } 
+                    },
+                    grid: {
+                        color: gridColor
+                    }
+                },
+                x: { 
+                    ticks: { 
+                        color: labelColor,
+                        font: { family: 'Poppins' } 
+                    },
+                    grid: {
+                        display: false
+                    }
+                }
             }
         }
     });

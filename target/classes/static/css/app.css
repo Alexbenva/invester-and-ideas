@@ -37,6 +37,26 @@ body.dark-theme .bg-light-subtle {
   background-color: rgba(255, 255, 255, 0.04) !important;
 }
 
+body.dark-theme .bg-white {
+  background-color: var(--vb-card) !important;
+}
+
+body.dark-theme .vb-floating-card {
+  background-color: var(--vb-card) !important;
+}
+
+body.dark-theme .border-light,
+body.dark-theme .border {
+  border-color: var(--vb-border) !important;
+}
+
+.about-hero-card {
+  background: linear-gradient(135deg, rgba(255,255,255,0.92) 0%, rgba(244,247,255,0.92) 100%);
+}
+body.dark-theme .about-hero-card {
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.92) 0%, rgba(7, 20, 37, 0.92) 100%) !important;
+}
+
 body.dark-theme .text-dark {
   color: #f8fafc !important;
 }
@@ -49,6 +69,11 @@ body.dark-theme .modal-content {
   color: var(--vb-ink) !important;
 }
 
+body.dark-theme .metric-card {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95)) !important;
+  border-color: var(--vb-border) !important;
+}
+
 body.dark-theme input.form-control,
 body.dark-theme select.form-select,
 body.dark-theme textarea.form-control {
@@ -57,13 +82,56 @@ body.dark-theme textarea.form-control {
   color: #fff !important;
 }
 
+body.dark-theme .table {
+  --bs-table-bg: transparent !important;
+  --bs-table-hover-bg: rgba(255, 255, 255, 0.04) !important;
+  background-color: transparent !important;
+  color: var(--vb-ink) !important;
+  border-color: var(--vb-border) !important;
+}
+
 body.dark-theme .table thead th {
   background-color: rgba(255, 255, 255, 0.04) !important;
   color: #f1f5f9 !important;
+  border-color: var(--vb-border) !important;
+}
+
+body.dark-theme .table td,
+body.dark-theme .table th,
+body.dark-theme .table tr {
+  background-color: transparent !important;
+  color: var(--vb-ink) !important;
+  border-color: var(--vb-border) !important;
 }
 
 body.dark-theme .table tbody tr:hover {
   background-color: rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Dropdown menu overrides */
+.dropdown-menu {
+  background-color: var(--vb-card) !important;
+  border: 1px solid var(--vb-border) !important;
+  border-radius: 12px !important;
+  padding: 0.5rem 0;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+}
+.dropdown-item {
+  color: var(--vb-slate) !important;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.dropdown-item:hover {
+  background-color: rgba(56, 103, 255, 0.08) !important;
+  color: var(--vb-indigo) !important;
+}
+
+body.dark-theme .dropdown-item {
+  color: #f1f5f9 !important;
+}
+body.dark-theme .dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.08) !important;
+  color: #fff !important;
 }
 
 body.vb-body {
@@ -109,6 +177,8 @@ h1, h2, h3, h4, h5, .navbar-brand {
 }
 
 .vb-navbar {
+  position: relative;
+  z-index: 1040;
   background: linear-gradient(135deg, rgba(7, 20, 37, 0.95), rgba(17, 43, 86, 0.9));
   box-shadow: var(--vb-shadow);
   backdrop-filter: blur(18px);
@@ -195,7 +265,7 @@ h1, h2, h3, h4, h5, .navbar-brand {
 .vb-panel {
   border-radius: 20px;
   border: 1px solid var(--vb-border);
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--vb-card);
   backdrop-filter: blur(18px);
   box-shadow: var(--vb-shadow);
 }
@@ -237,7 +307,7 @@ h1, h2, h3, h4, h5, .navbar-brand {
   border: 1px solid var(--vb-border);
   border-radius: 18px;
   box-shadow: var(--vb-shadow-soft);
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--vb-card);
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
